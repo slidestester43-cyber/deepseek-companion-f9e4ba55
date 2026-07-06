@@ -20,7 +20,7 @@ export function PageHero({
       </div>
       <div className="mx-auto max-w-7xl px-6">
         <Reveal>
-          <p className="text-sm sm:text-base uppercase tracking-[0.3em] text-white/90 font-bold" style={{ textShadow: "0 2px 8px rgba(240, 26, 26, 0.6)" }}>{eyebrow}</p>
+          <p className="text-sm sm:text-base uppercase tracking-[0.3em] text-white/90 font-bold" style={{ textShadow: "0 2px 8px rgba(0, 0, 0, 0.6)" }}>{eyebrow}</p>
           <h1 className="mt-5 font-display text-6xl sm:text-8xl lg:text-9xl font-black leading-[0.95] tracking-tight max-w-5xl text-white" style={{ textShadow: "0 4px 24px rgba(0,0,0,0.75), 0 2px 6px rgba(0,0,0,0.6)" }}>
             {title} {accent && <span className="text-gradient-gold block sm:inline">{accent}</span>}
           </h1>

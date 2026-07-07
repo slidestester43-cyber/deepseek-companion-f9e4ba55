@@ -12,6 +12,7 @@ import { Reveal } from "@/components/site/Reveal";
 import { supabase } from "@/integrations/supabase/client";
 import { downloadAdmissionPdf, type AdmissionData } from "@/lib/schoolPdf";
 import { CONTACT_PHONE, CONTACT_PHONE_DISPLAY } from "@/components/site/WhatsAppFab";
+import { GallerySection, ImageBesideParagraph } from "@/components/site/GallerySection";
 import school from "@/assets/school-hero.jpg";
 
 

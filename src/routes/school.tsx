@@ -150,6 +150,9 @@ function SchoolPage() {
         accent="Nurturing Futures."
         subtitle="A safe, joyful, Christ-centered learning home — preparing children for excellence in academics, character and calling."
         image={school}
+        logo={halelLogo.url}
+        logoLabel="School Logo"
+        logoAlt="Halel Schools logo"
       />
 
       <section className="py-10">

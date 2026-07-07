@@ -14,6 +14,7 @@ import { downloadAdmissionPdf, type AdmissionData } from "@/lib/schoolPdf";
 import { CONTACT_PHONE, CONTACT_PHONE_DISPLAY } from "@/components/site/WhatsAppFab";
 import { GallerySection, ImageBesideParagraph } from "@/components/site/GallerySection";
 import school from "@/assets/school-hero.jpg";
+import halelLogo from "@/assets/logos/halel-school.jpeg.asset.json";
 
 
 export const Route = createFileRoute("/school")({
@@ -149,6 +150,9 @@ function SchoolPage() {
         accent="Nurturing Futures."
         subtitle="A safe, joyful, Christ-centered learning home — preparing children for excellence in academics, character and calling."
         image={school}
+        logo={halelLogo.url}
+        logoLabel="School Logo"
+        logoAlt="Halel Schools logo"
       />
 
       <section className="py-10">

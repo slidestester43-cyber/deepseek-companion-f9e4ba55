@@ -7,6 +7,10 @@ import {
 import { Layout } from "@/components/site/Layout";
 import { Reveal } from "@/components/site/Reveal";
 import { Logo } from "@/components/site/Logo";
+import { GallerySection } from "@/components/site/GallerySection";
+import sifaLogo from "@/assets/logos/sifa-church.jpeg.asset.json";
+import halelLogo from "@/assets/logos/halel-school.jpeg.asset.json";
+import globalLogo from "@/assets/logos/54global.png.asset.json";
 import heroImg from "@/assets/hero-worship.jpg";
 import schoolImg from "@/assets/school-hero.jpg";
 import communityImg from "@/assets/community.jpg";
@@ -352,11 +356,66 @@ function Home() {
   return (
     <Layout>
       <Hero />
+      <EcosystemLogos />
       <About />
       <Institutions />
+      <GallerySection
+        section="school"
+        eyebrow="From the gallery"
+        title="Life across Halel School."
+        subtitle="Recent moments from our classrooms, worship and student journey."
+        limit={6}
+      />
+      <GallerySection
+        section="church"
+        eyebrow="From the gallery"
+        title="Moments from Sifa Church Nairobi."
+        subtitle="Services, worship and community across our church."
+        limit={6}
+      />
       <Leader />
       <Testimonies />
       <CTA />
     </Layout>
+  );
+}
+
+function EcosystemLogos() {
+  const items = [
+    { src: globalLogo.url, label: "54 Global African Limited", to: "/organizations" },
+    { src: sifaLogo.url, label: "Sifa Church Nairobi", to: "/church" },
+    { src: halelLogo.url, label: "Halel Schools", to: "/school" },
+  ] as const;
+  return (
+    <section className="py-16 sm:py-20 border-y border-border/60 bg-white/[0.02]">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6">
+        <Reveal>
+          <p className="text-xs uppercase tracking-[0.3em] text-primary text-center">One ecosystem</p>
+          <h2 className="mt-3 font-display text-3xl sm:text-4xl font-bold text-center">
+            The <span className="text-gradient-gold">54 Global</span> family
+          </h2>
+        </Reveal>
+        <div className="mt-10 grid grid-cols-1 sm:grid-cols-3 gap-4">
+          {items.map((it, i) => (
+            <Reveal key={it.label} delay={i * 100}>
+              <Link
+                to={it.to}
+                className="group flex items-center gap-4 rounded-2xl glass p-5 hover:ring-gold transition"
+              >
+                <div className="h-16 w-16 sm:h-20 sm:w-20 shrink-0 grid place-items-center rounded-xl bg-white p-2">
+                  <img src={it.src} alt={`${it.label} logo`} className="max-h-full max-w-full object-contain" loading="lazy" />
+                </div>
+                <div className="min-w-0">
+                  <div className="font-semibold truncate">{it.label}</div>
+                  <div className="mt-1 inline-flex items-center gap-1 text-sm text-primary">
+                    Learn more <ArrowRight className="h-3.5 w-3.5 group-hover:translate-x-0.5 transition" />
+                  </div>
+                </div>
+              </Link>
+            </Reveal>
+          ))}
+        </div>
+      </div>
+    </section>
   );
 }

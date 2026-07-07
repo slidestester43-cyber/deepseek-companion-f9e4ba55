@@ -10,8 +10,8 @@ import { CONTACT_PHONE, CONTACT_PHONE_DISPLAY, CONTACT_WHATSAPP_URL } from "@/co
 import { GallerySection, ImageBesideParagraph } from "@/components/site/GallerySection";
 import hero from "@/assets/hero-worship.jpg";
 import pastor from "@/assets/pastor.png";
-import churchLogo from "@/assets/logo.png";
-import schoolLogo from "@/assets/halel-school-logo.jpeg.asset.json";
+import sifaLogo from "@/assets/logos/sifa-church.jpeg.asset.json";
+import halelLogo from "@/assets/logos/halel-school.jpeg.asset.json";
 
 export const Route = createFileRoute("/church")({
   component: ChurchPage,
@@ -70,6 +70,9 @@ function ChurchPage() {
         accent="Worship & Spirituality."
         subtitle="A Spirit-led community pursuing God's presence, sound teaching, and global impact — led by Pastor Robert Wekesa Simiyu."
         image={hero}
+        logo={sifaLogo.url}
+        logoLabel="Sifa Church Nairobi"
+        logoAlt="Sifa Church Nairobi logo"
       />
 
       {/* Service times + Live */}
@@ -257,8 +260,8 @@ function ChurchPage() {
             <Reveal delay={120}>
               <div className="rounded-3xl bg-white border-2 border-primary/30 p-8 space-y-5 shadow-xl">
                 <div className="flex items-center gap-4 pb-3 border-b border-border">
-                  <img src={churchLogo} alt="Praise Church" className="h-12 w-12 object-contain" />
-                  <img src={schoolLogo.url} alt="Halel School" className="h-12 w-12 object-contain rounded" />
+                  <img src={sifaLogo.url} alt="Sifa Church Nairobi" className="h-12 w-12 object-contain rounded" />
+                  <img src={halelLogo.url} alt="Halel School" className="h-12 w-12 object-contain rounded" />
                   <p className="font-display font-bold">Give Directly</p>
                 </div>
 

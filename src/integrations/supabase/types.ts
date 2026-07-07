@@ -17,11 +17,9 @@ export type Database = {
       admissions: {
         Row: {
           academic_year: string | null
-          application_no: string | null
           child_dob: string | null
           child_name: string
-          choice_level: string | null
-          class_of_interest: string
+          class_of_interest: string | null
           created_at: string
           current_school: string | null
           home_language: string | null
@@ -32,26 +30,19 @@ export type Database = {
           message: string | null
           nationality: string | null
           other_remarks: string | null
-          parent_address: string | null
           parent_email: string
-          parent_id_no: string | null
           parent_name: string
           parent_phone: string
-          parent_relationship: string | null
           place_of_birth: string | null
           preferred_grade: string | null
           religion: string | null
           special_needs: string | null
-          status: string
-          updated_at: string
         }
         Insert: {
           academic_year?: string | null
-          application_no?: string | null
           child_dob?: string | null
           child_name: string
-          choice_level?: string | null
-          class_of_interest: string
+          class_of_interest?: string | null
           created_at?: string
           current_school?: string | null
           home_language?: string | null
@@ -62,26 +53,19 @@ export type Database = {
           message?: string | null
           nationality?: string | null
           other_remarks?: string | null
-          parent_address?: string | null
           parent_email: string
-          parent_id_no?: string | null
           parent_name: string
           parent_phone: string
-          parent_relationship?: string | null
           place_of_birth?: string | null
           preferred_grade?: string | null
           religion?: string | null
           special_needs?: string | null
-          status?: string
-          updated_at?: string
         }
         Update: {
           academic_year?: string | null
-          application_no?: string | null
           child_dob?: string | null
           child_name?: string
-          choice_level?: string | null
-          class_of_interest?: string
+          class_of_interest?: string | null
           created_at?: string
           current_school?: string | null
           home_language?: string | null
@@ -92,18 +76,13 @@ export type Database = {
           message?: string | null
           nationality?: string | null
           other_remarks?: string | null
-          parent_address?: string | null
           parent_email?: string
-          parent_id_no?: string | null
           parent_name?: string
           parent_phone?: string
-          parent_relationship?: string | null
           place_of_birth?: string | null
           preferred_grade?: string | null
           religion?: string | null
           special_needs?: string | null
-          status?: string
-          updated_at?: string
         }
         Relationships: []
       }
@@ -112,123 +91,43 @@ export type Database = {
           amount: number
           created_at: string
           currency: string
-          designation: string
+          designation: string | null
           donor_email: string
           donor_name: string
           donor_phone: string | null
-          frequency: string
+          frequency: string | null
           id: string
           message: string | null
-          method: string
-          reference: string | null
-          status: string
-          updated_at: string
+          method: string | null
+          status: string | null
         }
         Insert: {
           amount: number
           created_at?: string
           currency?: string
-          designation?: string
+          designation?: string | null
           donor_email: string
           donor_name: string
           donor_phone?: string | null
-          frequency?: string
+          frequency?: string | null
           id?: string
           message?: string | null
-          method: string
-          reference?: string | null
-          status?: string
-          updated_at?: string
+          method?: string | null
+          status?: string | null
         }
         Update: {
           amount?: number
           created_at?: string
           currency?: string
-          designation?: string
+          designation?: string | null
           donor_email?: string
           donor_name?: string
           donor_phone?: string | null
-          frequency?: string
+          frequency?: string | null
           id?: string
           message?: string | null
-          method?: string
-          reference?: string | null
-          status?: string
-          updated_at?: string
-        }
-        Relationships: []
-      }
-      event_registrations: {
-        Row: {
-          created_at: string
-          email: string
-          event_id: string | null
-          id: string
-          name: string
-          notes: string | null
-          phone: string | null
-          updated_at: string
-        }
-        Insert: {
-          created_at?: string
-          email: string
-          event_id?: string | null
-          id?: string
-          name: string
-          notes?: string | null
-          phone?: string | null
-          updated_at?: string
-        }
-        Update: {
-          created_at?: string
-          email?: string
-          event_id?: string | null
-          id?: string
-          name?: string
-          notes?: string | null
-          phone?: string | null
-          updated_at?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "event_registrations_event_id_fkey"
-            columns: ["event_id"]
-            isOneToOne: false
-            referencedRelation: "events"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      events: {
-        Row: {
-          cover_url: string | null
-          created_at: string
-          description: string | null
-          id: string
-          location: string | null
-          starts_at: string
-          title: string
-          updated_at: string
-        }
-        Insert: {
-          cover_url?: string | null
-          created_at?: string
-          description?: string | null
-          id?: string
-          location?: string | null
-          starts_at: string
-          title: string
-          updated_at?: string
-        }
-        Update: {
-          cover_url?: string | null
-          created_at?: string
-          description?: string | null
-          id?: string
-          location?: string | null
-          starts_at?: string
-          title?: string
-          updated_at?: string
+          method?: string | null
+          status?: string | null
         }
         Relationships: []
       }
@@ -239,8 +138,8 @@ export type Database = {
           id: string
           kind: string
           section: string
+          sort_order: number
           title: string | null
-          updated_at: string
           url: string
         }
         Insert: {
@@ -249,8 +148,8 @@ export type Database = {
           id?: string
           kind?: string
           section: string
+          sort_order?: number
           title?: string | null
-          updated_at?: string
           url: string
         }
         Update: {
@@ -259,327 +158,241 @@ export type Database = {
           id?: string
           kind?: string
           section?: string
+          sort_order?: number
           title?: string | null
-          updated_at?: string
           url?: string
         }
         Relationships: []
       }
       inquiries: {
         Row: {
-          category: string
+          category: string | null
           created_at: string
           email: string
           id: string
-          message: string
+          message: string | null
           name: string
           phone: string | null
-          status: string
           subject: string | null
-          updated_at: string
         }
         Insert: {
-          category?: string
+          category?: string | null
           created_at?: string
           email: string
           id?: string
-          message: string
+          message?: string | null
           name: string
           phone?: string | null
-          status?: string
           subject?: string | null
-          updated_at?: string
         }
         Update: {
-          category?: string
+          category?: string | null
           created_at?: string
           email?: string
           id?: string
-          message?: string
+          message?: string | null
           name?: string
           phone?: string | null
-          status?: string
           subject?: string | null
-          updated_at?: string
         }
         Relationships: []
       }
-      live_settings: {
-        Row: {
-          id: string
-          is_live: boolean
-          message: string | null
-          upcoming_at: string | null
-          upcoming_title: string | null
-          updated_at: string
-          youtube_url: string | null
-        }
-        Insert: {
-          id?: string
-          is_live?: boolean
-          message?: string | null
-          upcoming_at?: string | null
-          upcoming_title?: string | null
-          updated_at?: string
-          youtube_url?: string | null
-        }
-        Update: {
-          id?: string
-          is_live?: boolean
-          message?: string | null
-          upcoming_at?: string | null
-          upcoming_title?: string | null
-          updated_at?: string
-          youtube_url?: string | null
-        }
-        Relationships: []
-      }
-      prayer_requests: {
+      matches: {
         Row: {
           created_at: string
-          email: string | null
           id: string
-          is_private: boolean
-          name: string
-          request: string
           status: string
+          user1_id: string
+          user2_id: string
         }
         Insert: {
           created_at?: string
-          email?: string | null
           id?: string
-          is_private?: boolean
-          name: string
-          request: string
           status?: string
+          user1_id: string
+          user2_id: string
         }
         Update: {
           created_at?: string
-          email?: string | null
           id?: string
-          is_private?: boolean
-          name?: string
-          request?: string
           status?: string
+          user1_id?: string
+          user2_id?: string
         }
         Relationships: []
       }
-      properties_projects: {
+      messages: {
         Row: {
-          cover_url: string | null
           created_at: string
-          description: string | null
           id: string
-          location: string
-          price_from: string | null
-          status: string | null
-          title: string
-          updated_at: string
+          read: boolean
+          receiver_id: string
+          sender_id: string
+          text: string
         }
         Insert: {
-          cover_url?: string | null
           created_at?: string
-          description?: string | null
           id?: string
-          location: string
-          price_from?: string | null
-          status?: string | null
-          title: string
-          updated_at?: string
+          read?: boolean
+          receiver_id: string
+          sender_id: string
+          text: string
         }
         Update: {
-          cover_url?: string | null
           created_at?: string
-          description?: string | null
           id?: string
-          location?: string
-          price_from?: string | null
-          status?: string | null
-          title?: string
-          updated_at?: string
+          read?: boolean
+          receiver_id?: string
+          sender_id?: string
+          text?: string
         }
         Relationships: []
       }
-      sponsorships: {
+      post_comments: {
         Row: {
-          amount_usd: number | null
-          cause: string | null
           created_at: string
-          email: string
           id: string
-          message: string | null
-          phone: string | null
-          sponsor_name: string
-          status: string
-          tier: string
-          updated_at: string
+          post_id: string
+          text: string
+          user_id: string
         }
         Insert: {
-          amount_usd?: number | null
-          cause?: string | null
           created_at?: string
-          email: string
           id?: string
-          message?: string | null
-          phone?: string | null
-          sponsor_name: string
-          status?: string
-          tier: string
-          updated_at?: string
+          post_id: string
+          text: string
+          user_id: string
         }
         Update: {
-          amount_usd?: number | null
-          cause?: string | null
           created_at?: string
-          email?: string
           id?: string
-          message?: string | null
-          phone?: string | null
-          sponsor_name?: string
-          status?: string
-          tier?: string
+          post_id?: string
+          text?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "post_comments_post_id_fkey"
+            columns: ["post_id"]
+            isOneToOne: false
+            referencedRelation: "posts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      post_likes: {
+        Row: {
+          created_at: string
+          id: string
+          post_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          post_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          post_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "post_likes_post_id_fkey"
+            columns: ["post_id"]
+            isOneToOne: false
+            referencedRelation: "posts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      posts: {
+        Row: {
+          created_at: string
+          id: string
+          image_url: string | null
+          text: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          image_url?: string | null
+          text: string
           updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          image_url?: string | null
+          text?: string
+          updated_at?: string
+          user_id?: string
         }
         Relationships: []
       }
-      tour_bookings: {
+      profiles: {
         Row: {
-          adults: number | null
-          children: number | null
+          avatar_url: string | null
+          bio: string | null
           created_at: string
-          email: string
-          full_name: string
+          display_name: string | null
+          icebreaker: string | null
           id: string
-          notes: string | null
-          package: string
-          phone: string
-          status: string
-          travel_date: string | null
+          interests: string[] | null
+          location: string | null
           updated_at: string
+          user_id: string
+          username: string | null
         }
         Insert: {
-          adults?: number | null
-          children?: number | null
+          avatar_url?: string | null
+          bio?: string | null
           created_at?: string
-          email: string
-          full_name: string
+          display_name?: string | null
+          icebreaker?: string | null
           id?: string
-          notes?: string | null
-          package: string
-          phone: string
-          status?: string
-          travel_date?: string | null
+          interests?: string[] | null
+          location?: string | null
           updated_at?: string
+          user_id: string
+          username?: string | null
         }
         Update: {
-          adults?: number | null
-          children?: number | null
+          avatar_url?: string | null
+          bio?: string | null
           created_at?: string
-          email?: string
-          full_name?: string
+          display_name?: string | null
+          icebreaker?: string | null
           id?: string
-          notes?: string | null
-          package?: string
-          phone?: string
-          status?: string
-          travel_date?: string | null
+          interests?: string[] | null
+          location?: string | null
           updated_at?: string
-        }
-        Relationships: []
-      }
-      tour_packages: {
-        Row: {
-          cover_url: string | null
-          created_at: string
-          description: string | null
-          destination: string
-          duration_days: number | null
-          id: string
-          price_from: string | null
-          title: string
-          updated_at: string
-        }
-        Insert: {
-          cover_url?: string | null
-          created_at?: string
-          description?: string | null
-          destination: string
-          duration_days?: number | null
-          id?: string
-          price_from?: string | null
-          title: string
-          updated_at?: string
-        }
-        Update: {
-          cover_url?: string | null
-          created_at?: string
-          description?: string | null
-          destination?: string
-          duration_days?: number | null
-          id?: string
-          price_from?: string | null
-          title?: string
-          updated_at?: string
+          user_id?: string
+          username?: string | null
         }
         Relationships: []
       }
       user_roles: {
         Row: {
-          created_at: string
           id: string
           role: Database["public"]["Enums"]["app_role"]
           user_id: string
         }
         Insert: {
-          created_at?: string
           id?: string
           role: Database["public"]["Enums"]["app_role"]
           user_id: string
         }
         Update: {
-          created_at?: string
           id?: string
           role?: Database["public"]["Enums"]["app_role"]
           user_id?: string
-        }
-        Relationships: []
-      }
-      volunteer_signups: {
-        Row: {
-          availability: string | null
-          cause: string | null
-          created_at: string
-          email: string
-          full_name: string
-          id: string
-          phone: string
-          skills: string | null
-          status: string
-          updated_at: string
-        }
-        Insert: {
-          availability?: string | null
-          cause?: string | null
-          created_at?: string
-          email: string
-          full_name: string
-          id?: string
-          phone: string
-          skills?: string | null
-          status?: string
-          updated_at?: string
-        }
-        Update: {
-          availability?: string | null
-          cause?: string | null
-          created_at?: string
-          email?: string
-          full_name?: string
-          id?: string
-          phone?: string
-          skills?: string | null
-          status?: string
-          updated_at?: string
         }
         Relationships: []
       }
@@ -588,7 +401,6 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      gen_admission_no: { Args: never; Returns: string }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]

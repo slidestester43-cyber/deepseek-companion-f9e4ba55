@@ -5,7 +5,6 @@ import { z } from "zod";
 import { Layout } from "@/components/site/Layout";
 import { PageHero } from "@/components/site/PageHero";
 import { supabase } from "@/integrations/supabase/client";
-import { staticGallery } from "@/lib/staticGallery";
 import img from "@/assets/school-hero.jpg";
 
 const searchSchema = z.object({
@@ -38,10 +37,7 @@ function GalleryPage() {
     setItems(null);
     (supabase as any).from("gallery_items").select("*").eq("section", section).order("created_at", { ascending: false })
       .then(({ data }: any) => {
-        const dbItems = (data ?? []) as Item[];
-        const fallback = staticGallery.filter((s) => s.section === section) as unknown as Item[];
-        const seen = new Set(dbItems.map((d) => d.url));
-        setItems([...dbItems, ...fallback.filter((f) => !seen.has(f.url))]);
+        setItems((data ?? []) as Item[]);
       });
   }, [section]);
 

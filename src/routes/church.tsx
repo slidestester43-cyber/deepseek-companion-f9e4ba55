@@ -7,6 +7,7 @@ import { Layout } from "@/components/site/Layout";
 import { PageHero } from "@/components/site/PageHero";
 import { Reveal } from "@/components/site/Reveal";
 import { CONTACT_PHONE, CONTACT_PHONE_DISPLAY, CONTACT_WHATSAPP_URL } from "@/components/site/WhatsAppFab";
+import { GallerySection, ImageBesideParagraph } from "@/components/site/GallerySection";
 import hero from "@/assets/hero-worship.jpg";
 import pastor from "@/assets/pastor.png";
 import churchLogo from "@/assets/logo.png";
@@ -307,6 +308,25 @@ function ChurchPage() {
           </div>
         </div>
       </section>
+
+      <ImageBesideParagraph
+        section="church"
+        reverse
+        eyebrow="Our heartbeat"
+        title="A house of worship and encounter."
+        alt="Praise Church worship"
+        paragraphs={[
+          "Praise Church International is a Spirit-led family pursuing God's presence together. Every service is an invitation to encounter Jesus — through worship, the Word and prayer.",
+          "From city gatherings to global outreach, we are raising a generation that lives loved, walks in purpose, and carries the gospel to the nations.",
+        ]}
+      />
+
+      <GallerySection
+        section="church"
+        eyebrow="Church Gallery"
+        title="Moments of worship."
+        subtitle="Services, conferences and outreach across our community."
+      />
 
       {/* Sermons / events teaser */}
       <section className="py-20">

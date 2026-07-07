@@ -12,6 +12,7 @@ import { Reveal } from "@/components/site/Reveal";
 import { supabase } from "@/integrations/supabase/client";
 import { downloadAdmissionPdf, type AdmissionData } from "@/lib/schoolPdf";
 import { CONTACT_PHONE, CONTACT_PHONE_DISPLAY } from "@/components/site/WhatsAppFab";
+import { GallerySection, ImageBesideParagraph } from "@/components/site/GallerySection";
 import school from "@/assets/school-hero.jpg";
 
 
@@ -238,6 +239,24 @@ function SchoolPage() {
           </div>
         </div>
       </section>
+
+      <ImageBesideParagraph
+        section="school"
+        eyebrow="Our story"
+        title="A learning home built on love."
+        alt="Halel School moment"
+        paragraphs={[
+          "Halel School exists to nurture the whole child — mind, heart and spirit. Every classroom is a place where curiosity is celebrated and character is shaped alongside academics.",
+          "From daily devotions to hands-on CBC learning, our teachers walk with each pupil, drawing out gifts and preparing them to be leaders of their generation.",
+        ]}
+      />
+
+      <GallerySection
+        section="school"
+        eyebrow="Halel School Gallery"
+        title="Life at Halel."
+        subtitle="A peek into our classrooms, worship and student journey."
+      />
 
       {/* Admissions form — matches the official enrollment PDF */}
       <section id="admissions" className="py-20">

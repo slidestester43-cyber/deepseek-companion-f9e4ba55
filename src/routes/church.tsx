@@ -7,6 +7,7 @@ import { Layout } from "@/components/site/Layout";
 import { PageHero } from "@/components/site/PageHero";
 import { Reveal } from "@/components/site/Reveal";
 import { CONTACT_PHONE, CONTACT_PHONE_DISPLAY, CONTACT_WHATSAPP_URL } from "@/components/site/WhatsAppFab";
+import { GallerySection, ImageBesideParagraph } from "@/components/site/GallerySection";
 import hero from "@/assets/hero-worship.jpg";
 import pastor from "@/assets/pastor.png";
 import churchLogo from "@/assets/logo.png";

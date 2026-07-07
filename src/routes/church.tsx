@@ -309,6 +309,25 @@ function ChurchPage() {
         </div>
       </section>
 
+      <ImageBesideParagraph
+        section="church"
+        reverse
+        eyebrow="Our heartbeat"
+        title="A house of worship and encounter."
+        alt="Praise Church worship"
+        paragraphs={[
+          "Praise Church International is a Spirit-led family pursuing God's presence together. Every service is an invitation to encounter Jesus — through worship, the Word and prayer.",
+          "From city gatherings to global outreach, we are raising a generation that lives loved, walks in purpose, and carries the gospel to the nations.",
+        ]}
+      />
+
+      <GallerySection
+        section="church"
+        eyebrow="Church Gallery"
+        title="Moments of worship."
+        subtitle="Services, conferences and outreach across our community."
+      />
+
       {/* Sermons / events teaser */}
       <section className="py-20">
         <div className="mx-auto max-w-7xl px-6 grid lg:grid-cols-2 gap-6">

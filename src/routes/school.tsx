@@ -14,6 +14,7 @@ import { downloadAdmissionPdf, type AdmissionData } from "@/lib/schoolPdf";
 import { CONTACT_PHONE, CONTACT_PHONE_DISPLAY } from "@/components/site/WhatsAppFab";
 import { GallerySection, ImageBesideParagraph } from "@/components/site/GallerySection";
 import school from "@/assets/school-hero.jpg";
+import halelLogo from "@/assets/logos/halel-school.jpeg.asset.json";
 
 
 export const Route = createFileRoute("/school")({

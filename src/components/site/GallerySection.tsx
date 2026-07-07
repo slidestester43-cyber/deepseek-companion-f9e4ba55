@@ -115,24 +115,41 @@ export function ImageBesideParagraph({
   eyebrow,
   title,
   paragraphs,
-  image,
+  section,
   alt,
   reverse = false,
 }: {
   eyebrow: string;
   title: string;
   paragraphs: string[];
-  image: string;
+  section: "school" | "church" | "company";
   alt: string;
   reverse?: boolean;
 }) {
+  const [image, setImage] = useState<string | null>(null);
+  useEffect(() => {
+    (supabase as any)
+      .from("gallery_items")
+      .select("url")
+      .eq("section", section)
+      .eq("kind", "image")
+      .order("created_at", { ascending: true })
+      .limit(1)
+      .then(({ data }: any) => setImage(data?.[0]?.url ?? null));
+  }, [section]);
   return (
     <section className="py-20">
       <div className={`mx-auto max-w-7xl px-6 grid lg:grid-cols-2 gap-10 items-center ${reverse ? "lg:[&>*:first-child]:order-2" : ""}`}>
         <Reveal>
           <div className="relative">
             <div className="absolute -inset-2 bg-gradient-to-tr from-primary/30 to-accent/30 blur-2xl rounded-3xl" />
-            <img src={image} alt={alt} loading="lazy" className="relative rounded-3xl w-full aspect-[4/3] object-cover" />
+            {image ? (
+              <img src={image} alt={alt} loading="lazy" className="relative rounded-3xl w-full aspect-[4/3] object-cover" />
+            ) : (
+              <div className="relative rounded-3xl w-full aspect-[4/3] glass grid place-items-center">
+                <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+              </div>
+            )}
           </div>
         </Reveal>
         <Reveal delay={100}>

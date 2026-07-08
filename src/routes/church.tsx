@@ -305,6 +305,18 @@ function ChurchPage() {
                   <a href={CONTACT_WHATSAPP_URL} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 rounded-full bg-green-600 px-4 py-2 text-sm font-bold text-white">
                     WhatsApp
                   </a>
+                  <a
+                    href="https://www.facebook.com/Praisechurchinternational"
+                    target="_blank"
+                    rel="noreferrer"
+                    aria-label="Praise Church International on Facebook"
+                    className="inline-flex items-center gap-2 rounded-full bg-[#1877F2] px-4 py-2 text-sm font-bold text-white"
+                  >
+                    <svg viewBox="0 0 24 24" className="h-4 w-4" fill="currentColor" aria-hidden="true">
+                      <path d="M22 12a10 10 0 1 0-11.56 9.88v-6.99H7.9V12h2.54V9.8c0-2.5 1.49-3.89 3.77-3.89 1.09 0 2.24.2 2.24.2v2.47h-1.26c-1.24 0-1.63.77-1.63 1.56V12h2.78l-.44 2.89h-2.34v6.99A10 10 0 0 0 22 12Z"/>
+                    </svg>
+                    Facebook
+                  </a>
                 </div>
               </div>
             </Reveal>

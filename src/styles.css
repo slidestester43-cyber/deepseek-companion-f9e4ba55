@@ -138,3 +138,18 @@
 .animate-float-slow { animation: float-slow 6s ease-in-out infinite; }
 .animate-pulse-glow { animation: pulse-glow 3.6s ease-in-out infinite; }
 .shimmer { background: linear-gradient(90deg, transparent, oklch(1 0 0 / 0.55), transparent); background-size: 200% 100%; animation: shimmer 3s linear infinite; }
+
+/* Phone-only tweaks (viewport is fixed at width=1280 so use device metrics).
+   Enlarges base type/spacing, gives the top bar more breathing room, and
+   pulls the home hero right below the top bar. Laptops/desktops unaffected. */
+@media only screen and (max-device-width: 820px) {
+  html { font-size: 20px; }
+  header > div > div { padding-top: 1.1rem; padding-bottom: 1.1rem; }
+  header .h-10.w-10 { height: 3.25rem; width: 3.25rem; }
+  header nav a, header nav button { font-size: 1rem; padding-top: 0.6rem; padding-bottom: 0.6rem; }
+  .home-hero { padding-top: 6.5rem; min-height: auto; }
+}
+@media only screen and (max-device-width: 820px) and (hover: none) {
+  html { font-size: 22px; }
+}
+

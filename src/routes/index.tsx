@@ -55,7 +55,7 @@ function Hero() {
     return () => clearInterval(t);
   }, []);
   return (
-    <section className="relative min-h-[100svh] flex items-center pt-28 pb-20 overflow-hidden">
+    <section className="home-hero relative min-h-[100svh] flex items-center pt-28 pb-20 overflow-hidden">
       <div className="absolute inset-0 -z-10">
         <img
           src={heroImg}

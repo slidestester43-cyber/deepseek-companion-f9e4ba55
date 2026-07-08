@@ -134,10 +134,17 @@ function FoundationPage() {
           <div className="mt-10 grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {tiers.map((t, i) => (
               <Reveal key={t.amt} delay={i * 60}>
-                <div className="glass rounded-2xl p-6 h-full">
+                <Link
+                  to="/donate"
+                  search={{ tier: t.amt } as any}
+                  className="group block glass rounded-2xl p-6 h-full transition hover:ring-2 hover:ring-primary/50 hover:-translate-y-0.5"
+                >
                   <div className="font-display text-4xl font-bold text-gradient-gold">{t.amt}</div>
                   <p className="mt-3 text-sm text-muted-foreground">{t.label}</p>
-                </div>
+                  <span className="mt-5 inline-flex items-center gap-1.5 text-xs font-semibold text-primary">
+                    Give this amount <ArrowRight className="h-3.5 w-3.5 group-hover:translate-x-0.5 transition" />
+                  </span>
+                </Link>
               </Reveal>
             ))}
           </div>

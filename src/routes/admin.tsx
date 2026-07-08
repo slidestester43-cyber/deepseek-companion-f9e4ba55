@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { Layout } from "@/components/site/Layout";
 import { supabase } from "@/integrations/supabase/client";
 import { CloudinaryUpload } from "@/components/site/CloudinaryUpload";
+import { uploadToCloudinary } from "@/lib/cloudinary";
 import { downloadAdmissionPdf } from "@/lib/schoolPdf";
 import {
   LogOut, Inbox, GraduationCap, Heart, HandHeart, Loader2, Calendar, Radio, Image as ImageIcon,
@@ -336,6 +337,8 @@ function GalleryPanel() {
   const [items, setItems] = useState<any[] | null>(null);
   const [form, setForm] = useState({ url: "", kind: "image" as "image" | "video", title: "", caption: "" });
   const [adding, setAdding] = useState(false);
+  const [bulkBusy, setBulkBusy] = useState(false);
+  const [bulkProgress, setBulkProgress] = useState<{ done: number; total: number } | null>(null);
 
   async function load() {
     const { data } = await (supabase as any).from("gallery_items").select("*").eq("section", section).order("created_at", { ascending: false });
@@ -358,6 +361,35 @@ function GalleryPanel() {
     load();
   }
 
+  async function bulkUpload(files: FileList | null) {
+    if (!files || files.length === 0) return;
+    setBulkBusy(true);
+    setBulkProgress({ done: 0, total: files.length });
+    const rows: any[] = [];
+    try {
+      for (let i = 0; i < files.length; i++) {
+        const f = files[i];
+        const isVideo = f.type.startsWith("video/");
+        const r = await uploadToCloudinary(f, {
+          folder: `gallery/${section}`,
+          resourceType: isVideo ? "video" : "image",
+        });
+        rows.push({ section, kind: isVideo ? "video" : "image", url: r.secure_url, title: null, caption: null });
+        setBulkProgress({ done: i + 1, total: files.length });
+      }
+      if (rows.length) {
+        const { error } = await (supabase as any).from("gallery_items").insert(rows);
+        if (error) alert(error.message);
+      }
+      await load();
+    } catch (e: any) {
+      alert(e?.message ?? "Bulk upload failed");
+    } finally {
+      setBulkBusy(false);
+      setBulkProgress(null);
+    }
+  }
+
   return (
     <div className="space-y-4">
       <div className="flex flex-wrap items-center gap-2 justify-between">
@@ -372,6 +404,24 @@ function GalleryPanel() {
         <button onClick={() => setAdding((v) => !v)} className="inline-flex items-center gap-2 rounded-full bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground">
           <Plus className="h-4 w-4" /> {adding ? "Cancel" : "Add media"}
         </button>
+      </div>
+
+      <div className="rounded-3xl glass p-4 flex flex-wrap items-center gap-3">
+        <label className="inline-flex items-center gap-2 rounded-full bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground cursor-pointer">
+          <Plus className="h-4 w-4" />
+          {bulkBusy ? `Uploading ${bulkProgress?.done ?? 0}/${bulkProgress?.total ?? 0}…` : "Bulk upload (multi-select)"}
+          <input
+            type="file"
+            multiple
+            accept="image/*,video/*"
+            disabled={bulkBusy}
+            onChange={(e) => { bulkUpload(e.target.files); e.currentTarget.value = ""; }}
+            className="hidden"
+          />
+        </label>
+        <span className="text-xs text-muted-foreground">
+          Select multiple images/videos to add them to the <b>{section}</b> gallery in one go.
+        </span>
       </div>
 
       {adding && (

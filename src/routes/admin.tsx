@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { Layout } from "@/components/site/Layout";
 import { supabase } from "@/integrations/supabase/client";
 import { CloudinaryUpload } from "@/components/site/CloudinaryUpload";
+import { uploadToCloudinary } from "@/lib/cloudinary";
 import { downloadAdmissionPdf } from "@/lib/schoolPdf";
 import {
   LogOut, Inbox, GraduationCap, Heart, HandHeart, Loader2, Calendar, Radio, Image as ImageIcon,

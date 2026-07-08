@@ -151,7 +151,7 @@ function SchoolPage() {
         subtitle="A safe, joyful, Christ-centered learning home — preparing children for excellence in academics, character and calling."
         image={school}
         logo={halelLogo.url}
-        logoLabel="School Logo"
+        logoLabel="Halel School"
         logoAlt="Halel Schools logo"
       />
 

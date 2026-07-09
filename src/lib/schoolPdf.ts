@@ -28,6 +28,9 @@ export type AdmissionData = {
   last_grade?: string | null;
   kcpe_index?: string | null;
   other_remarks?: string | null;
+  // Section 5 — Payment
+  admission_fee_paid?: boolean | null;
+  payment_confirmation_code?: string | null;
   // Section 6 — Declaration / notes
   message?: string | null;
   created_at?: string;
@@ -190,15 +193,48 @@ export function buildAdmissionPdf(d: AdmissionData): jsPDF {
 
   y += 18 + Math.max(s3H, s4H) + 12;
 
-  // ===== Section 5 — Declaration (full width) =====
+  // ===== Section 5 — Payment (full width) =====
+  doc.addPage();
+  y = 122;
+
   doc.setFillColor(...PINK);
   doc.roundedRect(M, y, W - M * 2, 18, 3, 3, "F");
   doc.setTextColor(255);
   doc.setFont("helvetica", "bold");
   doc.setFontSize(10);
-  doc.text("5.  DECLARATION", M + 8, y + 13);
+  doc.text("5.  ADMISSIONS FEE PAYMENT", M + 8, y + 13);
   y += 22;
-  cardBg(M, y, 70); (doc as any).internal; // just bg
+  doc.setFillColor(252, 240, 246);
+  doc.roundedRect(M, y, W - M * 2, 90, 4, 4, "F");
+  doc.setTextColor(...INK);
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(9);
+  doc.text("Admissions fee: KES 750", M + 8, y + 16);
+  doc.text("I have paid the KES 750 admissions fee:", M + 8, y + 34);
+  doc.setDrawColor(...PINK);
+  doc.setLineWidth(1);
+  doc.rect(M + 240, y + 24, 9, 9); // checkbox
+  if (d.admission_fee_paid) {
+    doc.setTextColor(...PINK);
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(11);
+    doc.text("X", M + 242, y + 32);
+    doc.setTextColor(...INK);
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(9);
+  }
+  doc.text(`Payment confirmation code (M-Pesa):  ${d.payment_confirmation_code || "—"}`, M + 8, y + 54);
+  doc.text("Payment must be confirmed before the application is processed.", M + 8, y + 72);
+  y += 98;
+
+  // ===== Section 6 — Declaration (full width) =====
+  doc.setFillColor(...PINK);
+  doc.roundedRect(M, y, W - M * 2, 18, 3, 3, "F");
+  doc.setTextColor(255);
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(10);
+  doc.text("6.  DECLARATION", M + 8, y + 13);
+  y += 22;
   doc.setFillColor(252, 240, 246);
   doc.roundedRect(M, y, W - M * 2, 70, 4, 4, "F");
   doc.setTextColor(...INK);

@@ -17,6 +17,7 @@ export type Database = {
       admissions: {
         Row: {
           academic_year: string | null
+          admission_fee_paid: boolean | null
           child_dob: string | null
           child_name: string
           class_of_interest: string | null
@@ -33,6 +34,7 @@ export type Database = {
           parent_email: string
           parent_name: string
           parent_phone: string
+          payment_confirmation_code: string | null
           place_of_birth: string | null
           preferred_grade: string | null
           religion: string | null
@@ -40,6 +42,7 @@ export type Database = {
         }
         Insert: {
           academic_year?: string | null
+          admission_fee_paid?: boolean | null
           child_dob?: string | null
           child_name: string
           class_of_interest?: string | null
@@ -56,6 +59,7 @@ export type Database = {
           parent_email: string
           parent_name: string
           parent_phone: string
+          payment_confirmation_code?: string | null
           place_of_birth?: string | null
           preferred_grade?: string | null
           religion?: string | null
@@ -63,6 +67,7 @@ export type Database = {
         }
         Update: {
           academic_year?: string | null
+          admission_fee_paid?: boolean | null
           child_dob?: string | null
           child_name?: string
           class_of_interest?: string | null
@@ -79,6 +84,7 @@ export type Database = {
           parent_email?: string
           parent_name?: string
           parent_phone?: string
+          payment_confirmation_code?: string | null
           place_of_birth?: string | null
           preferred_grade?: string | null
           religion?: string | null

@@ -72,6 +72,9 @@ const admSchema = z.object({
   last_grade: z.string().max(60).optional().or(z.literal("")),
   kcpe_index: z.string().max(40).optional().or(z.literal("")),
   other_remarks: z.string().max(500).optional().or(z.literal("")),
+  // Payment
+  admission_fee_paid: z.coerce.boolean().default(false),
+  payment_confirmation_code: z.string().max(50).optional().or(z.literal("")),
   // Notes
   message: z.string().max(1000).optional().or(z.literal("")),
 });
@@ -122,6 +125,8 @@ function SchoolPage() {
       other_remarks: p.other_remarks || null,
       message: p.message || null,
       academic_year: academicYear,
+      admission_fee_paid: p.admission_fee_paid,
+      payment_confirmation_code: p.payment_confirmation_code || null,
     } as any;
     const { data: inserted, error } = await supabase.from("admissions").insert(insertPayload).select("*").single();
     if (error) { setStatus("error"); setError(error.message); return; }
@@ -133,6 +138,8 @@ function SchoolPage() {
       parent_name: p.parent_name,
       parent_email: p.parent_email,
       parent_phone: p.parent_phone,
+      admission_fee_paid: p.admission_fee_paid,
+      payment_confirmation_code: p.payment_confirmation_code,
     };
     downloadAdmissionPdf(pdfData);
     setLastApp(pdfData);
@@ -345,6 +352,21 @@ function SchoolPage() {
                       <input name="last_grade" placeholder="Last grade completed" className={F} />
                       <input name="kcpe_index" placeholder="KCPE Index No. (if applicable)" className={`${F} sm:col-span-2`} />
                       <textarea name="other_remarks" rows={2} placeholder="Any other remarks" className={`${F} sm:col-span-2`} />
+                    </div>
+                  </fieldset>
+
+                  {/* 5. Admissions Fee Payment */}
+                  <fieldset className="rounded-2xl border border-border p-5">
+                    <legend className="px-2 text-xs font-bold uppercase tracking-wider text-primary">5. Admissions Fee</legend>
+                    <div className="space-y-3">
+                      <p className="text-sm text-muted-foreground">
+                        A non-refundable admissions fee of <strong>KES 750</strong> is required to process this application.
+                      </p>
+                      <label className="flex items-start gap-3 text-sm">
+                        <input type="checkbox" name="admission_fee_paid" className="mt-1" />
+                        <span>I have paid the KES 750 admissions fee.</span>
+                      </label>
+                      <input name="payment_confirmation_code" placeholder="M-Pesa confirmation code" className={`${F} w-full`} />
                     </div>
                   </fieldset>
 

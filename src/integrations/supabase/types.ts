@@ -18,8 +18,10 @@ export type Database = {
         Row: {
           academic_year: string | null
           admission_fee_paid: boolean | null
+          application_no: string | null
           child_dob: string | null
           child_name: string
+          choice_level: string | null
           class_of_interest: string | null
           created_at: string
           current_school: string | null
@@ -31,9 +33,12 @@ export type Database = {
           message: string | null
           nationality: string | null
           other_remarks: string | null
+          parent_address: string | null
           parent_email: string
+          parent_id_no: string | null
           parent_name: string
           parent_phone: string
+          parent_relationship: string | null
           payment_confirmation_code: string | null
           place_of_birth: string | null
           preferred_grade: string | null
@@ -43,8 +48,10 @@ export type Database = {
         Insert: {
           academic_year?: string | null
           admission_fee_paid?: boolean | null
+          application_no?: string | null
           child_dob?: string | null
           child_name: string
+          choice_level?: string | null
           class_of_interest?: string | null
           created_at?: string
           current_school?: string | null
@@ -56,9 +63,12 @@ export type Database = {
           message?: string | null
           nationality?: string | null
           other_remarks?: string | null
+          parent_address?: string | null
           parent_email: string
+          parent_id_no?: string | null
           parent_name: string
           parent_phone: string
+          parent_relationship?: string | null
           payment_confirmation_code?: string | null
           place_of_birth?: string | null
           preferred_grade?: string | null
@@ -68,8 +78,10 @@ export type Database = {
         Update: {
           academic_year?: string | null
           admission_fee_paid?: boolean | null
+          application_no?: string | null
           child_dob?: string | null
           child_name?: string
+          choice_level?: string | null
           class_of_interest?: string | null
           created_at?: string
           current_school?: string | null
@@ -81,9 +93,12 @@ export type Database = {
           message?: string | null
           nationality?: string | null
           other_remarks?: string | null
+          parent_address?: string | null
           parent_email?: string
+          parent_id_no?: string | null
           parent_name?: string
           parent_phone?: string
+          parent_relationship?: string | null
           payment_confirmation_code?: string | null
           place_of_birth?: string | null
           preferred_grade?: string | null

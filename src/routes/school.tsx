@@ -128,18 +128,17 @@ function SchoolPage() {
       admission_fee_paid: p.admission_fee_paid,
       payment_confirmation_code: p.payment_confirmation_code || null,
     } as any;
-    const { data: inserted, error } = await supabase.from("admissions").insert(insertPayload).select("*").single();
+    // NOTE: anon users can INSERT but not SELECT admissions rows (RLS).
+    // So we can't chain .select() — that would fail with a permission error.
+    const { error } = await supabase.from("admissions").insert(insertPayload);
     if (error) { setStatus("error"); setError(error.message); return; }
 
+    // Generate a client-side reference (real application_no is assigned by DB and viewable by admins).
+    const clientRef = `HSN-${new Date().getFullYear()}-${Math.floor(Math.random() * 90000 + 10000)}`;
     const pdfData: AdmissionData = {
-      ...(inserted as any),
-      // ensure required fields are present even if select omitted anything
-      child_name: p.child_name,
-      parent_name: p.parent_name,
-      parent_email: p.parent_email,
-      parent_phone: p.parent_phone,
-      admission_fee_paid: p.admission_fee_paid,
-      payment_confirmation_code: p.payment_confirmation_code,
+      ...(insertPayload as any),
+      application_no: clientRef,
+      created_at: new Date().toISOString(),
     };
     downloadAdmissionPdf(pdfData);
     setLastApp(pdfData);

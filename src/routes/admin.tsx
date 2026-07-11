@@ -361,8 +361,10 @@ function GalleryPanel() {
     load();
   }
 
-  async function bulkUpload(files: FileList | null) {
-    if (!files || files.length === 0) return;
+  async function bulkUpload(fileList: FileList | null) {
+    if (!fileList || fileList.length === 0) return;
+    // Copy to a stable array — the input's FileList becomes invalid once we reset the input.
+    const files = Array.from(fileList);
     setBulkBusy(true);
     setBulkProgress({ done: 0, total: files.length });
     const rows: any[] = [];
@@ -415,7 +417,12 @@ function GalleryPanel() {
             multiple
             accept="image/*,video/*"
             disabled={bulkBusy}
-            onChange={(e) => { bulkUpload(e.target.files); e.currentTarget.value = ""; }}
+            onChange={(e) => {
+              const input = e.currentTarget;
+              const files = input.files;
+              // Kick off the upload with a copied array, then safely reset the input.
+              bulkUpload(files).finally(() => { input.value = ""; });
+            }}
             className="hidden"
           />
         </label>

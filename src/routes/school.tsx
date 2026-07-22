@@ -411,6 +411,7 @@ function SchoolPage() {
           </Reveal>
         </div>
       </section>
+      <SchoolPaymentSection F={F} />
     </Layout>
   );
 }

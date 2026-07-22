@@ -414,3 +414,115 @@ function SchoolPage() {
     </Layout>
   );
 }
+
+function SchoolPaymentSection({ F }: { F: string }) {
+  const [method, setMethod] = useState<"M-Pesa" | "Bank">("M-Pesa");
+  const [done, setDone] = useState<SchoolPaymentData | null>(null);
+
+  function onSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    const fd = new FormData(e.currentTarget);
+    const data: SchoolPaymentData = {
+      receipt_no: `HSP-${new Date().getFullYear()}-${Math.floor(Math.random() * 90000 + 10000)}`,
+      parent_name: String(fd.get("parent_name") || "").trim(),
+      student_name: String(fd.get("student_name") || "").trim(),
+      grade: String(fd.get("grade") || "").trim() || null,
+      purpose: String(fd.get("purpose") || "").trim(),
+      amount: String(fd.get("amount") || "").trim(),
+      method,
+      reference_code: String(fd.get("reference_code") || "").trim(),
+      notes: String(fd.get("notes") || "").trim() || null,
+      paid_at: new Date().toISOString(),
+    };
+    if (!data.parent_name || !data.student_name || !data.amount || !data.reference_code || !data.purpose) return;
+    downloadSchoolPaymentPdf(data);
+    setDone(data);
+    (e.target as HTMLFormElement).reset();
+  }
+
+  return (
+    <section id="school-payments" className="pb-20">
+      <div className="container-safe">
+        <Reveal>
+          <div className="rounded-3xl glass p-6 md:p-8">
+            <div className="flex items-start justify-between gap-4 flex-wrap">
+              <div>
+                <p className="text-xs uppercase tracking-[0.2em] text-primary font-bold">School Payments</p>
+                <h3 className="mt-2 font-display text-2xl md:text-3xl font-bold">Pay school fees & get a receipt</h3>
+                <p className="mt-2 text-sm text-muted-foreground max-w-xl">
+                  Send your payment via M-Pesa or Bank transfer, then enter the confirmation code below.
+                  Submit to instantly download an official PDF receipt.
+                </p>
+              </div>
+              <div className="rounded-2xl bg-primary/10 px-4 py-3 text-sm">
+                <p className="font-semibold">M-Pesa Paybill</p>
+                <p className="text-muted-foreground">Use school account · Acc: Student name</p>
+              </div>
+            </div>
+
+            {done ? (
+              <div className="mt-6 rounded-2xl bg-primary/10 p-6 text-center">
+                <Check className="mx-auto h-10 w-10 text-primary" />
+                <h4 className="mt-3 font-display text-xl font-bold">Receipt generated & downloaded</h4>
+                <p className="mt-1 text-sm text-muted-foreground">
+                  Receipt No. <span className="font-mono font-semibold">{done.receipt_no}</span> — {done.method} code{" "}
+                  <span className="font-mono">{done.reference_code}</span>
+                </p>
+                <button
+                  onClick={() => downloadSchoolPaymentPdf(done)}
+                  className="mt-4 inline-flex items-center gap-2 rounded-full bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground"
+                >
+                  <Download className="h-4 w-4" /> Download again
+                </button>
+                <button
+                  onClick={() => setDone(null)}
+                  className="mt-4 ml-2 inline-flex items-center gap-2 rounded-full glass px-5 py-2.5 text-sm font-semibold"
+                >
+                  Record another payment
+                </button>
+              </div>
+            ) : (
+              <form onSubmit={onSubmit} className="mt-6 grid gap-4 md:grid-cols-2">
+                <input name="parent_name" required placeholder="Parent / Guardian full name *" className={F} />
+                <input name="student_name" required placeholder="Student full name *" className={F} />
+                <input name="grade" placeholder="Grade / Class (e.g. Grade 4)" className={F} />
+                <input name="purpose" required placeholder="Payment for * (e.g. Term 1 fees, Uniform)" className={F} />
+                <input name="amount" required inputMode="numeric" placeholder="Amount paid (KES) *" className={F} />
+                <div className="flex gap-2">
+                  {(["M-Pesa", "Bank"] as const).map((m) => (
+                    <button
+                      key={m}
+                      type="button"
+                      onClick={() => setMethod(m)}
+                      className={`flex-1 rounded-xl border px-4 py-3 text-sm font-semibold transition ${
+                        method === m ? "bg-primary text-primary-foreground border-primary" : "bg-input border-border text-foreground"
+                      }`}
+                    >
+                      {m}
+                    </button>
+                  ))}
+                </div>
+                <input
+                  name="reference_code"
+                  required
+                  placeholder={method === "M-Pesa" ? "M-Pesa confirmation code * (e.g. QK7XYZ12AB)" : "Bank reference / message *"}
+                  className={`${F} md:col-span-2`}
+                />
+                <textarea name="notes" rows={2} placeholder="Notes (optional)" className={`${F} md:col-span-2`} />
+                <button
+                  type="submit"
+                  className="md:col-span-2 inline-flex items-center justify-center gap-2 rounded-full bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground"
+                >
+                  <Download className="h-4 w-4" /> Submit & download receipt
+                </button>
+                <p className="md:col-span-2 text-xs text-muted-foreground">
+                  Keep the downloaded PDF for your records. The school bursar will verify the payment code against records.
+                </p>
+              </form>
+            )}
+          </div>
+        </Reveal>
+      </div>
+    </section>
+  );
+}

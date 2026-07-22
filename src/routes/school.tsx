@@ -426,6 +426,7 @@ function SchoolPaymentSection({ F }: { F: string }) {
     const data: SchoolPaymentData = {
       receipt_no: `HSP-${new Date().getFullYear()}-${Math.floor(Math.random() * 90000 + 10000)}`,
       parent_name: String(fd.get("parent_name") || "").trim(),
+      parent_phone: String(fd.get("parent_phone") || "").trim() || null,
       student_name: String(fd.get("student_name") || "").trim(),
       grade: String(fd.get("grade") || "").trim() || null,
       purpose: String(fd.get("purpose") || "").trim(),
@@ -435,10 +436,11 @@ function SchoolPaymentSection({ F }: { F: string }) {
       notes: String(fd.get("notes") || "").trim() || null,
       paid_at: new Date().toISOString(),
     };
-    if (!data.parent_name || !data.student_name || !data.amount || !data.reference_code || !data.purpose) return;
+    if (!data.parent_name || !data.parent_phone || !data.student_name || !data.amount || !data.reference_code || !data.purpose) return;
+    const form = e.currentTarget;
     downloadSchoolPaymentPdf(data);
     setDone(data);
-    (e.target as HTMLFormElement).reset();
+    form.reset();
   }
 
   return (
@@ -485,11 +487,12 @@ function SchoolPaymentSection({ F }: { F: string }) {
             ) : (
               <form onSubmit={onSubmit} className="mt-6 grid gap-4 md:grid-cols-2">
                 <input name="parent_name" required placeholder="Parent / Guardian full name *" className={F} />
+                <input name="parent_phone" required type="tel" placeholder="Parent phone number *" className={F} />
                 <input name="student_name" required placeholder="Student full name *" className={F} />
                 <input name="grade" placeholder="Grade / Class (e.g. Grade 4)" className={F} />
                 <input name="purpose" required placeholder="Payment for * (e.g. Term 1 fees, Uniform)" className={F} />
                 <input name="amount" required inputMode="numeric" placeholder="Amount paid (KES) *" className={F} />
-                <div className="flex gap-2">
+                <div className="flex gap-2 md:col-span-2">
                   {(["M-Pesa", "Bank"] as const).map((m) => (
                     <button
                       key={m}

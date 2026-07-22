@@ -1,8 +1,10 @@
 import jsPDF from "jspdf";
+import halelLogo from "@/assets/logos/halel-school.jpeg.asset.json";
 
 export type SchoolPaymentData = {
   receipt_no?: string;
   parent_name: string;
+  parent_phone?: string | null;
   student_name: string;
   grade?: string | null;
   purpose: string;
@@ -18,7 +20,21 @@ const SAPPHIRE: [number, number, number] = [30, 64, 175];
 const INK: [number, number, number] = [30, 30, 40];
 const MUTED: [number, number, number] = [110, 110, 120];
 
-export function buildSchoolPaymentPdf(d: SchoolPaymentData): jsPDF {
+async function loadImage(url: string): Promise<HTMLImageElement | null> {
+  try {
+    return await new Promise((resolve, reject) => {
+      const img = new Image();
+      img.crossOrigin = "anonymous";
+      img.onload = () => resolve(img);
+      img.onerror = reject;
+      img.src = url;
+    });
+  } catch {
+    return null;
+  }
+}
+
+export async function buildSchoolPaymentPdf(d: SchoolPaymentData): Promise<jsPDF> {
   const doc = new jsPDF({ unit: "pt", format: "a4" });
   const W = doc.internal.pageSize.getWidth();
   const H = doc.internal.pageSize.getHeight();
@@ -27,6 +43,10 @@ export function buildSchoolPaymentPdf(d: SchoolPaymentData): jsPDF {
   // Header band
   doc.setFillColor(...SAPPHIRE);
   doc.rect(0, 0, W, 90, "F");
+  const logo = await loadImage(halelLogo.url);
+  if (logo) {
+    try { doc.addImage(logo, "JPEG", W - M - 64, 13, 64, 64); } catch { /* ignore */ }
+  }
   doc.setTextColor(255);
   doc.setFont("helvetica", "bold");
   doc.setFontSize(22);
@@ -66,6 +86,7 @@ export function buildSchoolPaymentPdf(d: SchoolPaymentData): jsPDF {
   // Details card
   const rows: [string, string][] = [
     ["Parent / Guardian", d.parent_name || "—"],
+    ["Parent Phone", d.parent_phone || "—"],
     ["Student Name", d.student_name || "—"],
     ["Grade / Class", d.grade || "—"],
     ["Payment For", d.purpose || "—"],
@@ -128,8 +149,8 @@ export function buildSchoolPaymentPdf(d: SchoolPaymentData): jsPDF {
   return doc;
 }
 
-export function downloadSchoolPaymentPdf(d: SchoolPaymentData) {
-  const doc = buildSchoolPaymentPdf(d);
+export async function downloadSchoolPaymentPdf(d: SchoolPaymentData) {
+  const doc = await buildSchoolPaymentPdf(d);
   const safe = (d.student_name || "payment").replace(/[^a-z0-9]+/gi, "-").toLowerCase();
   doc.save(`halel-receipt-${d.receipt_no || safe}.pdf`);
 }

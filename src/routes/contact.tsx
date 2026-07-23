@@ -1,8 +1,10 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Mail, MapPin, Phone, MessageCircle, ShieldCheck } from "lucide-react";
+import { useState } from "react";
 import { Layout } from "@/components/site/Layout";
 import { PageHero } from "@/components/site/PageHero";
 import { Reveal } from "@/components/site/Reveal";
+import { supabase } from "@/integrations/supabase/client";
 import { CONTACT_PHONE, CONTACT_PHONE_DISPLAY, CONTACT_WHATSAPP_URL } from "@/components/site/WhatsAppFab";
 import img from "@/assets/community.jpg";
 
@@ -22,6 +24,32 @@ const SCHOOL_MAP_EMBED =
 const SCHOOL_MAP_LINK = "https://maps.app.goo.gl/ZDNMiqDn8jG8jEiY8";
 
 function ContactPage() {
+  const [status, setStatus] = useState<"idle" | "saving" | "ok" | "error">("idle");
+  const [err, setErr] = useState<string | null>(null);
+
+  async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    setErr(null);
+    const fd = new FormData(e.currentTarget);
+    const payload = {
+      name: String(fd.get("name") || "").trim(),
+      email: String(fd.get("email") || "").trim(),
+      phone: String(fd.get("phone") || "").trim() || null,
+      subject: String(fd.get("subject") || "General inquiry"),
+      category: String(fd.get("subject") || "General inquiry"),
+      message: String(fd.get("message") || "").trim(),
+    };
+    if (!payload.name || !payload.email || !payload.message) {
+      setErr("Please fill in your name, email and message.");
+      return;
+    }
+    setStatus("saving");
+    const { error } = await supabase.from("inquiries").insert(payload);
+    if (error) { setStatus("error"); setErr(error.message); return; }
+    setStatus("ok");
+    (e.target as HTMLFormElement).reset();
+  }
+
   return (
     <Layout>
       <PageHero
@@ -34,20 +62,22 @@ function ContactPage() {
       <section className="py-16">
         <div className="mx-auto max-w-7xl px-6 grid lg:grid-cols-[1.2fr,1fr] gap-6">
           <Reveal>
-            <form onSubmit={(e) => e.preventDefault()} className="rounded-3xl glass p-8 grid sm:grid-cols-2 gap-3">
-              <input className="rounded-xl bg-input/60 border border-border px-4 py-3 text-sm outline-none focus:ring-2 ring-primary/40" placeholder="Full name" />
-              <input className="rounded-xl bg-input/60 border border-border px-4 py-3 text-sm outline-none focus:ring-2 ring-primary/40" placeholder="Email" type="email" />
-              <input className="rounded-xl bg-input/60 border border-border px-4 py-3 text-sm outline-none focus:ring-2 ring-primary/40 sm:col-span-2" placeholder="Phone (optional)" />
-              <select className="rounded-xl bg-input/60 border border-border px-4 py-3 text-sm outline-none sm:col-span-2">
-                <option>I'd like to…</option>
+            <form onSubmit={onSubmit} className="rounded-3xl glass p-8 grid sm:grid-cols-2 gap-3">
+              <input name="name" required className="rounded-xl bg-input/60 border border-border px-4 py-3 text-sm outline-none focus:ring-2 ring-primary/40" placeholder="Full name" />
+              <input name="email" required type="email" className="rounded-xl bg-input/60 border border-border px-4 py-3 text-sm outline-none focus:ring-2 ring-primary/40" placeholder="Email" />
+              <input name="phone" className="rounded-xl bg-input/60 border border-border px-4 py-3 text-sm outline-none focus:ring-2 ring-primary/40 sm:col-span-2" placeholder="Phone (optional)" />
+              <select name="subject" defaultValue="General inquiry" className="rounded-xl bg-input/60 border border-border px-4 py-3 text-sm outline-none sm:col-span-2">
+                <option>General inquiry</option>
                 <option>Partner with the ministry</option>
                 <option>Enquire about Halel School admissions</option>
                 <option>Submit a prayer request</option>
                 <option>Join a community program</option>
               </select>
-              <textarea rows={5} className="rounded-xl bg-input/60 border border-border px-4 py-3 text-sm outline-none sm:col-span-2" placeholder="Your message" />
-              <button className="sm:col-span-2 inline-flex items-center justify-center gap-2 rounded-full bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground glow-gold">
-                Send message
+              <textarea name="message" required rows={5} className="rounded-xl bg-input/60 border border-border px-4 py-3 text-sm outline-none sm:col-span-2" placeholder="Your message" />
+              {err && <p className="sm:col-span-2 text-sm text-destructive">{err}</p>}
+              {status === "ok" && <p className="sm:col-span-2 text-sm text-primary">Thanks — your message has been received. We'll reply within 24 hours.</p>}
+              <button disabled={status === "saving"} className="sm:col-span-2 inline-flex items-center justify-center gap-2 rounded-full bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground glow-gold disabled:opacity-60">
+                {status === "saving" ? "Sending…" : "Send message"}
               </button>
               <div className="sm:col-span-2 mt-2 flex items-center justify-between text-xs text-muted-foreground">
                 <span>We typically reply within 24 hours.</span>

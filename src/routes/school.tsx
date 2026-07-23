@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   GraduationCap, BookOpen, Trophy, Music2, Palette, HeartHandshake,
   ShieldCheck, Sparkles, ArrowRight, Heart, HandHeart, Check, Loader2, Download, Phone,
@@ -22,11 +22,11 @@ export const Route = createFileRoute("/school")({
   component: SchoolPage,
   head: () => ({
     meta: [
-      { title: "Halel School Nairobi — Christian CBC School | Enroll Your Child" },
-      { name: "description", content: "Halel School Nairobi: modern Christ-centered CBC education. Lower & Upper Primary. Enroll your child or sponsor a scholarship today." },
-      { name: "keywords", content: "Halel School, Halel School Nairobi, Christian school Nairobi, CBC school Nairobi, primary school Nairobi, Buruburu school" },
+      { title: "Halel School Nairobi — Christian CBE School | Enroll Your Child" },
+      { name: "description", content: "Halel School Nairobi: modern Christ-centered CBE education. Lower & Upper Primary. Enroll your child or sponsor a scholarship today." },
+      { name: "keywords", content: "Halel School, Halel School Nairobi, Christian school Nairobi, CBE school Nairobi, primary school Nairobi, Buruburu school" },
       { property: "og:title", content: "Halel School Nairobi — Growing Faith, Nurturing Futures" },
-      { property: "og:description", content: "Modern Christ-centered CBC education in Nairobi. Enroll your child today." },
+      { property: "og:description", content: "Modern Christ-centered CBE education in Nairobi. Enroll your child today." },
       { property: "og:image", content: "/og-school.jpg" },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -38,7 +38,7 @@ export const Route = createFileRoute("/school")({
         "@context": "https://schema.org",
         "@type": "School",
         name: "Halel School Nairobi",
-        description: "Christ-centered CBC school in Nairobi offering Lower & Upper Primary.",
+        description: "Christ-centered CBE school in Nairobi offering Lower & Upper Primary.",
         address: { "@type": "PostalAddress", streetAddress: "Second Avenue, Buruburu Farm", addressLocality: "Nairobi", addressCountry: "KE" },
         telephone: "+254715297696",
         url: "https://54globalafrikan.com/school",
@@ -90,6 +90,25 @@ function SchoolPage() {
   const [status, setStatus] = useState<"idle" | "saving" | "ok" | "error">("idle");
   const [error, setError] = useState<string | null>(null);
   const [lastApp, setLastApp] = useState<AdmissionData | null>(null);
+  const [heroImages, setHeroImages] = useState<string[]>([]);
+
+  useEffect(() => {
+    (async () => {
+      const { data } = await (supabase as any)
+        .from("gallery_items")
+        .select("url,kind")
+        .eq("section", "school")
+        .eq("kind", "image")
+        .limit(40);
+      const urls: string[] = (data ?? []).map((r: any) => r.url).filter(Boolean);
+      // Shuffle for random order
+      for (let i = urls.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [urls[i], urls[j]] = [urls[j], urls[i]];
+      }
+      if (urls.length > 0) setHeroImages(urls);
+    })();
+  }, []);
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -157,6 +176,8 @@ function SchoolPage() {
         accent="Nurturing Futures."
         subtitle="A safe, joyful, Christ-centered learning home — preparing children for excellence in academics, character and calling."
         image={school}
+        images={heroImages.length > 0 ? heroImages : undefined}
+        rotateMs={4500}
         logo={halelLogo.url}
         logoLabel="Halel School"
         logoAlt="Halel Schools logo"
@@ -190,7 +211,7 @@ function SchoolPage() {
           {[
             { v: "350+", l: "Pupils enrolled" },
             { v: "25+", l: "Qualified educators" },
-            { v: "CBC", l: "Aligned curriculum" },
+            { v: "CBE", l: "Aligned curriculum" },
             { v: "100%", l: "Christ-centered" },
           ].map((s) => (
             <Reveal key={s.l}>
@@ -207,8 +228,8 @@ function SchoolPage() {
         <div className="mx-auto max-w-7xl px-6">
           <Reveal>
             <p className="text-xs uppercase tracking-[0.3em] text-primary">Academics</p>
-            <h2 className="mt-3 font-display text-4xl sm:text-5xl font-bold max-w-2xl">A CBC journey, designed with care.</h2>
-            <p className="mt-4 max-w-2xl text-muted-foreground">Our learning philosophy blends competency-based education with biblical values — equipping the heart, mind and hands of every learner.</p>
+            <h2 className="mt-3 font-display text-4xl sm:text-5xl font-bold max-w-2xl">A CBE journey, designed with care.</h2>
+            <p className="mt-4 max-w-2xl text-muted-foreground">Our learning philosophy blends Competency-Based Education (CBE) with biblical values — equipping the heart, mind and hands of every learner.</p>
           </Reveal>
           <div className="mt-12 grid sm:grid-cols-2 gap-4">
             {[
@@ -258,7 +279,7 @@ function SchoolPage() {
         alt="Halel School moment"
         paragraphs={[
           "Halel School exists to nurture the whole child — mind, heart and spirit. Every classroom is a place where curiosity is celebrated and character is shaped alongside academics.",
-          "From daily devotions to hands-on CBC learning, our teachers walk with each pupil, drawing out gifts and preparing them to be leaders of their generation.",
+          "From daily devotions to hands-on CBE learning, our teachers walk with each pupil, drawing out gifts and preparing them to be leaders of their generation.",
         ]}
       />
 

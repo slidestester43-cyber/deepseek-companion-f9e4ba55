@@ -5,9 +5,10 @@ import { supabase } from "@/integrations/supabase/client";
 import { CloudinaryUpload } from "@/components/site/CloudinaryUpload";
 import { uploadToCloudinary } from "@/lib/cloudinary";
 import { downloadAdmissionPdf } from "@/lib/schoolPdf";
+import { downloadSchoolPaymentPdf, type SchoolPaymentData } from "@/lib/schoolPaymentPdf";
 import {
   LogOut, Inbox, GraduationCap, Heart, HandHeart, Loader2, Calendar, Radio, Image as ImageIcon,
-  Trash2, Plus, Download, Save, Users,
+  Trash2, Plus, Download, Save, Users, Receipt,
 } from "lucide-react";
 
 export const Route = createFileRoute("/admin")({
@@ -28,7 +29,7 @@ export const Route = createFileRoute("/admin")({
 
 type Tab =
   | "admissions" | "donations" | "inquiries" | "prayer"
-  | "events" | "registrations" | "live" | "gallery";
+  | "events" | "registrations" | "live" | "gallery" | "school_payments";
 
 function AdminPage() {
   const [tab, setTab] = useState<Tab>("admissions");
@@ -57,6 +58,7 @@ function AdminPage() {
 
   const tabs: { id: Tab; label: string; Icon: any }[] = [
     { id: "admissions", label: "Admissions", Icon: GraduationCap },
+    { id: "school_payments", label: "School payments", Icon: Receipt },
     { id: "registrations", label: "Event registrations", Icon: Users },
     { id: "donations", label: "Donations", Icon: Heart },
     { id: "inquiries", label: "Inquiries", Icon: HandHeart },
@@ -88,6 +90,7 @@ function AdminPage() {
 
           <div className="mt-6">
             {tab === "admissions" && <AdmissionsPanel />}
+            {tab === "school_payments" && <SchoolPaymentsPanel />}
             {tab === "registrations" && <RegistrationsPanel />}
             {tab === "donations" && <SimpleTablePanel table="donations" />}
             {tab === "inquiries" && <SimpleTablePanel table="inquiries" />}

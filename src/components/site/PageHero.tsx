@@ -1,19 +1,31 @@
+import { useEffect, useState } from "react";
 import { Reveal } from "./Reveal";
 
 export function PageHero({
-  eyebrow, title, accent, subtitle, image, logo, logoLabel, logoAlt,
+  eyebrow, title, accent, subtitle, image, images, rotateMs = 4000, logo, logoLabel, logoAlt,
 }: {
   eyebrow: string;
   title: string;
   accent?: string;
   subtitle: string;
   image: string;
+  /** Optional list of images to rotate through as the hero visual. When provided, images cycle every `rotateMs`. */
+  images?: string[];
+  rotateMs?: number;
   /** Optional logo (URL). Rendered as a labeled badge next to the title. */
   logo?: string;
   /** Small label shown above/next to the logo (e.g. "School Logo"). */
   logoLabel?: string;
   logoAlt?: string;
 }) {
+  const pool = (images && images.length > 0) ? images : [image];
+  const [idx, setIdx] = useState(0);
+  useEffect(() => {
+    if (pool.length < 2) return;
+    const t = setInterval(() => setIdx((i) => (i + 1) % pool.length), rotateMs);
+    return () => clearInterval(t);
+  }, [pool.length, rotateMs]);
+  const current = pool[idx] ?? image;
   return (
     <section className="relative pt-32 pb-16 sm:pt-40 sm:pb-24 overflow-hidden">
       {/* Ambient background glow, no full-bleed photo */}
@@ -44,12 +56,22 @@ export function PageHero({
         <Reveal delay={120}>
           <div className="relative">
             <div className="absolute -inset-3 rounded-[2rem] bg-gradient-to-tr from-primary/30 via-accent/25 to-cross/20 blur-2xl opacity-70" />
-            <img
-              src={image}
-              alt=""
-              className="relative w-full aspect-[4/3] object-cover rounded-3xl border border-border shadow-2xl"
-              fetchPriority="high"
-            />
+            <div className="relative w-full aspect-[4/3] rounded-3xl border border-border shadow-2xl overflow-hidden">
+              {pool.map((src, i) => (
+                <img
+                  key={src + i}
+                  src={src}
+                  alt=""
+                  className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${i === idx ? "opacity-100" : "opacity-0"}`}
+                  fetchPriority={i === 0 ? "high" : "low"}
+                  loading={i === 0 ? "eager" : "lazy"}
+                />
+              ))}
+              {/* Fallback for SSR or when pool empty */}
+              {pool.length === 0 && (
+                <img src={current} alt="" className="w-full h-full object-cover" />
+              )}
+            </div>
           </div>
         </Reveal>
       </div>

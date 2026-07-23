@@ -399,6 +399,54 @@ export type Database = {
         }
         Relationships: []
       }
+      school_payments: {
+        Row: {
+          amount: string
+          created_at: string
+          grade: string | null
+          id: string
+          method: string
+          notes: string | null
+          paid_at: string
+          parent_name: string
+          parent_phone: string | null
+          purpose: string
+          receipt_no: string
+          reference_code: string
+          student_name: string
+        }
+        Insert: {
+          amount: string
+          created_at?: string
+          grade?: string | null
+          id?: string
+          method: string
+          notes?: string | null
+          paid_at?: string
+          parent_name: string
+          parent_phone?: string | null
+          purpose: string
+          receipt_no: string
+          reference_code: string
+          student_name: string
+        }
+        Update: {
+          amount?: string
+          created_at?: string
+          grade?: string | null
+          id?: string
+          method?: string
+          notes?: string | null
+          paid_at?: string
+          parent_name?: string
+          parent_phone?: string | null
+          purpose?: string
+          receipt_no?: string
+          reference_code?: string
+          student_name?: string
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           id: string

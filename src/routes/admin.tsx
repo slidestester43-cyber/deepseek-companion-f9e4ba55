@@ -5,9 +5,10 @@ import { supabase } from "@/integrations/supabase/client";
 import { CloudinaryUpload } from "@/components/site/CloudinaryUpload";
 import { uploadToCloudinary } from "@/lib/cloudinary";
 import { downloadAdmissionPdf } from "@/lib/schoolPdf";
+import { downloadSchoolPaymentPdf, type SchoolPaymentData } from "@/lib/schoolPaymentPdf";
 import {
   LogOut, Inbox, GraduationCap, Heart, HandHeart, Loader2, Calendar, Radio, Image as ImageIcon,
-  Trash2, Plus, Download, Save, Users,
+  Trash2, Plus, Download, Save, Users, Receipt,
 } from "lucide-react";
 
 export const Route = createFileRoute("/admin")({
@@ -28,7 +29,7 @@ export const Route = createFileRoute("/admin")({
 
 type Tab =
   | "admissions" | "donations" | "inquiries" | "prayer"
-  | "events" | "registrations" | "live" | "gallery";
+  | "events" | "registrations" | "live" | "gallery" | "school_payments";
 
 function AdminPage() {
   const [tab, setTab] = useState<Tab>("admissions");
@@ -57,6 +58,7 @@ function AdminPage() {
 
   const tabs: { id: Tab; label: string; Icon: any }[] = [
     { id: "admissions", label: "Admissions", Icon: GraduationCap },
+    { id: "school_payments", label: "School payments", Icon: Receipt },
     { id: "registrations", label: "Event registrations", Icon: Users },
     { id: "donations", label: "Donations", Icon: Heart },
     { id: "inquiries", label: "Inquiries", Icon: HandHeart },
@@ -88,6 +90,7 @@ function AdminPage() {
 
           <div className="mt-6">
             {tab === "admissions" && <AdmissionsPanel />}
+            {tab === "school_payments" && <SchoolPaymentsPanel />}
             {tab === "registrations" && <RegistrationsPanel />}
             {tab === "donations" && <SimpleTablePanel table="donations" />}
             {tab === "inquiries" && <SimpleTablePanel table="inquiries" />}
@@ -128,6 +131,73 @@ function AdmissionsPanel() {
               <td className="px-3 py-3">
                 <button onClick={() => downloadAdmissionPdf(r)} className="inline-flex items-center gap-1 rounded-full bg-primary px-3 py-1.5 text-xs font-semibold text-primary-foreground">
                   <Download className="h-3 w-3" /> PDF
+                </button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
+/* ============== SCHOOL PAYMENTS ============== */
+function SchoolPaymentsPanel() {
+  const [rows, setRows] = useState<any[] | null>(null);
+  async function load() {
+    const { data } = await (supabase as any)
+      .from("school_payments")
+      .select("*")
+      .order("created_at", { ascending: false })
+      .limit(500);
+    setRows(data ?? []);
+  }
+  useEffect(() => { load(); }, []);
+  async function del(id: string) {
+    if (!confirm("Delete this receipt?")) return;
+    await (supabase as any).from("school_payments").delete().eq("id", id);
+    load();
+  }
+  if (!rows) return <Loader />;
+  if (rows.length === 0) return <Empty msg="No school payments yet." />;
+  return (
+    <div className="rounded-3xl glass p-4 overflow-x-auto">
+      <table className="w-full text-sm">
+        <thead>
+          <tr className="text-left text-xs uppercase text-muted-foreground">
+            <th className="px-3 py-2">Date</th>
+            <th className="px-3 py-2">Receipt No.</th>
+            <th className="px-3 py-2">Parent</th>
+            <th className="px-3 py-2">Student</th>
+            <th className="px-3 py-2">Purpose</th>
+            <th className="px-3 py-2">Amount</th>
+            <th className="px-3 py-2">Method / Ref</th>
+            <th className="px-3 py-2"></th>
+          </tr>
+        </thead>
+        <tbody>
+          {rows.map((r) => (
+            <tr key={r.id} className="border-t border-border/60 align-top">
+              <td className="px-3 py-3 text-xs text-muted-foreground">{new Date(r.paid_at ?? r.created_at).toLocaleString()}</td>
+              <td className="px-3 py-3 font-mono text-xs">{r.receipt_no}</td>
+              <td className="px-3 py-3">{r.parent_name}<div className="text-xs text-muted-foreground">{r.parent_phone ?? ""}</div></td>
+              <td className="px-3 py-3">{r.student_name}{r.grade ? <div className="text-xs text-muted-foreground">{r.grade}</div> : null}</td>
+              <td className="px-3 py-3 max-w-[14rem] truncate">{r.purpose}</td>
+              <td className="px-3 py-3">KES {r.amount}</td>
+              <td className="px-3 py-3 text-xs">{r.method}<div className="font-mono">{r.reference_code}</div></td>
+              <td className="px-3 py-3 flex gap-2">
+                <button
+                  onClick={() => downloadSchoolPaymentPdf(r as SchoolPaymentData)}
+                  className="inline-flex items-center gap-1 rounded-full bg-primary px-3 py-1.5 text-xs font-semibold text-primary-foreground"
+                >
+                  <Download className="h-3 w-3" /> PDF
+                </button>
+                <button
+                  onClick={() => del(r.id)}
+                  className="rounded-full bg-destructive/10 text-destructive p-2"
+                  aria-label="Delete receipt"
+                >
+                  <Trash2 className="h-3.5 w-3.5" />
                 </button>
               </td>
             </tr>

@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   GraduationCap, BookOpen, Trophy, Music2, Palette, HeartHandshake,
   ShieldCheck, Sparkles, ArrowRight, Heart, HandHeart, Check, Loader2, Download, Phone,
@@ -22,11 +22,11 @@ export const Route = createFileRoute("/school")({
   component: SchoolPage,
   head: () => ({
     meta: [
-      { title: "Halel School Nairobi — Christian CBC School | Enroll Your Child" },
-      { name: "description", content: "Halel School Nairobi: modern Christ-centered CBC education. Lower & Upper Primary. Enroll your child or sponsor a scholarship today." },
-      { name: "keywords", content: "Halel School, Halel School Nairobi, Christian school Nairobi, CBC school Nairobi, primary school Nairobi, Buruburu school" },
+      { title: "Halel School Nairobi — Christian CBE School | Enroll Your Child" },
+      { name: "description", content: "Halel School Nairobi: modern Christ-centered CBE education. Lower & Upper Primary. Enroll your child or sponsor a scholarship today." },
+      { name: "keywords", content: "Halel School, Halel School Nairobi, Christian school Nairobi, CBE school Nairobi, primary school Nairobi, Buruburu school" },
       { property: "og:title", content: "Halel School Nairobi — Growing Faith, Nurturing Futures" },
-      { property: "og:description", content: "Modern Christ-centered CBC education in Nairobi. Enroll your child today." },
+      { property: "og:description", content: "Modern Christ-centered CBE education in Nairobi. Enroll your child today." },
       { property: "og:image", content: "/og-school.jpg" },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -38,7 +38,7 @@ export const Route = createFileRoute("/school")({
         "@context": "https://schema.org",
         "@type": "School",
         name: "Halel School Nairobi",
-        description: "Christ-centered CBC school in Nairobi offering Lower & Upper Primary.",
+        description: "Christ-centered CBE school in Nairobi offering Lower & Upper Primary.",
         address: { "@type": "PostalAddress", streetAddress: "Second Avenue, Buruburu Farm", addressLocality: "Nairobi", addressCountry: "KE" },
         telephone: "+254715297696",
         url: "https://54globalafrikan.com/school",
@@ -90,6 +90,25 @@ function SchoolPage() {
   const [status, setStatus] = useState<"idle" | "saving" | "ok" | "error">("idle");
   const [error, setError] = useState<string | null>(null);
   const [lastApp, setLastApp] = useState<AdmissionData | null>(null);
+  const [heroImages, setHeroImages] = useState<string[]>([]);
+
+  useEffect(() => {
+    (async () => {
+      const { data } = await (supabase as any)
+        .from("gallery_items")
+        .select("url,kind")
+        .eq("section", "school")
+        .eq("kind", "image")
+        .limit(40);
+      const urls: string[] = (data ?? []).map((r: any) => r.url).filter(Boolean);
+      // Shuffle for random order
+      for (let i = urls.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [urls[i], urls[j]] = [urls[j], urls[i]];
+      }
+      if (urls.length > 0) setHeroImages(urls);
+    })();
+  }, []);
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -157,6 +176,8 @@ function SchoolPage() {
         accent="Nurturing Futures."
         subtitle="A safe, joyful, Christ-centered learning home — preparing children for excellence in academics, character and calling."
         image={school}
+        images={heroImages.length > 0 ? heroImages : undefined}
+        rotateMs={4500}
         logo={halelLogo.url}
         logoLabel="Halel School"
         logoAlt="Halel Schools logo"
@@ -190,7 +211,7 @@ function SchoolPage() {
           {[
             { v: "350+", l: "Pupils enrolled" },
             { v: "25+", l: "Qualified educators" },
-            { v: "CBC", l: "Aligned curriculum" },
+            { v: "CBE", l: "Aligned curriculum" },
             { v: "100%", l: "Christ-centered" },
           ].map((s) => (
             <Reveal key={s.l}>
@@ -207,8 +228,8 @@ function SchoolPage() {
         <div className="mx-auto max-w-7xl px-6">
           <Reveal>
             <p className="text-xs uppercase tracking-[0.3em] text-primary">Academics</p>
-            <h2 className="mt-3 font-display text-4xl sm:text-5xl font-bold max-w-2xl">A CBC journey, designed with care.</h2>
-            <p className="mt-4 max-w-2xl text-muted-foreground">Our learning philosophy blends competency-based education with biblical values — equipping the heart, mind and hands of every learner.</p>
+            <h2 className="mt-3 font-display text-4xl sm:text-5xl font-bold max-w-2xl">A CBE journey, designed with care.</h2>
+            <p className="mt-4 max-w-2xl text-muted-foreground">Our learning philosophy blends Competency-Based Education (CBE) with biblical values — equipping the heart, mind and hands of every learner.</p>
           </Reveal>
           <div className="mt-12 grid sm:grid-cols-2 gap-4">
             {[
@@ -258,7 +279,7 @@ function SchoolPage() {
         alt="Halel School moment"
         paragraphs={[
           "Halel School exists to nurture the whole child — mind, heart and spirit. Every classroom is a place where curiosity is celebrated and character is shaped alongside academics.",
-          "From daily devotions to hands-on CBC learning, our teachers walk with each pupil, drawing out gifts and preparing them to be leaders of their generation.",
+          "From daily devotions to hands-on CBE learning, our teachers walk with each pupil, drawing out gifts and preparing them to be leaders of their generation.",
         ]}
       />
 
@@ -419,9 +440,12 @@ function SchoolPage() {
 function SchoolPaymentSection({ F }: { F: string }) {
   const [method, setMethod] = useState<"M-Pesa" | "Bank">("M-Pesa");
   const [done, setDone] = useState<SchoolPaymentData | null>(null);
+  const [saving, setSaving] = useState(false);
+  const [errMsg, setErrMsg] = useState<string | null>(null);
 
-  function onSubmit(e: React.FormEvent<HTMLFormElement>) {
+  async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    setErrMsg(null);
     const fd = new FormData(e.currentTarget);
     const data: SchoolPaymentData = {
       receipt_no: `HSP-${new Date().getFullYear()}-${Math.floor(Math.random() * 90000 + 10000)}`,
@@ -438,6 +462,22 @@ function SchoolPaymentSection({ F }: { F: string }) {
     };
     if (!data.parent_name || !data.parent_phone || !data.student_name || !data.amount || !data.reference_code || !data.purpose) return;
     const form = e.currentTarget;
+    setSaving(true);
+    const { error } = await (supabase as any).from("school_payments").insert({
+      receipt_no: data.receipt_no,
+      parent_name: data.parent_name,
+      parent_phone: data.parent_phone,
+      student_name: data.student_name,
+      grade: data.grade,
+      purpose: data.purpose,
+      amount: data.amount,
+      method: data.method,
+      reference_code: data.reference_code,
+      notes: data.notes,
+      paid_at: data.paid_at,
+    });
+    setSaving(false);
+    if (error) { setErrMsg(error.message); return; }
     downloadSchoolPaymentPdf(data);
     setDone(data);
     form.reset();
@@ -513,11 +553,14 @@ function SchoolPaymentSection({ F }: { F: string }) {
                   className={`${F} md:col-span-2`}
                 />
                 <textarea name="notes" rows={2} placeholder="Notes (optional)" className={`${F} md:col-span-2`} />
+                {errMsg && <p className="md:col-span-2 text-sm text-destructive">{errMsg}</p>}
                 <button
                   type="submit"
-                  className="md:col-span-2 inline-flex items-center justify-center gap-2 rounded-full bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground"
+                  disabled={saving}
+                  className="md:col-span-2 inline-flex items-center justify-center gap-2 rounded-full bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground disabled:opacity-60"
                 >
-                  <Download className="h-4 w-4" /> Submit & download receipt
+                  {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : <Download className="h-4 w-4" />}
+                  Submit & download receipt
                 </button>
                 <p className="md:col-span-2 text-xs text-muted-foreground">
                   Keep the downloaded PDF for your records. The school bursar will verify the payment code against records.

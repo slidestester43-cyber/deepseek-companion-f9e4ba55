@@ -198,7 +198,7 @@ function About() {
 function Institutions() {
   const cards = [
     { tag: "Faith", title: "Praise Church Nairobi", desc: "A church transforming lives beyond Sunday — worship, discipleship and outreach.", to: "/church", img: heroImg, accent: "from-primary/40 to-cross/30" },
-    { tag: "Education", title: "Halel School Nairobi", desc: "Raising Godly leaders. Inspiring academic excellence. Modern CBC learning rooted in Christ.", to: "/school", img: schoolImg, accent: "from-spirit/40 to-primary/30" },
+    { tag: "Education", title: "Halel School Nairobi", desc: "Raising Godly leaders. Inspiring academic excellence. Modern CBE learning rooted in Christ.", to: "/school", img: schoolImg, accent: "from-spirit/40 to-primary/30" },
     { tag: "Real Estate", title: "Sinap Properties", desc: "Creating wealth through smart property investment across Nairobi's growth corridors.", to: "/properties", img: propertyImg, accent: "from-emerald-500/40 to-primary/20" },
     { tag: "Tourism", title: "Praise Adventures & Tours", desc: "Discover Kenya. Experience Africa. Travel with purpose — every trip funds transformation.", to: "/tours", img: tourImg, accent: "from-orange-500/40 to-accent/20" },
     { tag: "Humanitarian", title: "54 Global Foundation", desc: "Restoring hope, one life at a time — sponsor a child, support a widow, feed a family.", to: "/foundation", img: globalImg, accent: "from-rose-500/40 to-primary/20" },

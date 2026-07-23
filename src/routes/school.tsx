@@ -440,9 +440,12 @@ function SchoolPage() {
 function SchoolPaymentSection({ F }: { F: string }) {
   const [method, setMethod] = useState<"M-Pesa" | "Bank">("M-Pesa");
   const [done, setDone] = useState<SchoolPaymentData | null>(null);
+  const [saving, setSaving] = useState(false);
+  const [errMsg, setErrMsg] = useState<string | null>(null);
 
-  function onSubmit(e: React.FormEvent<HTMLFormElement>) {
+  async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    setErrMsg(null);
     const fd = new FormData(e.currentTarget);
     const data: SchoolPaymentData = {
       receipt_no: `HSP-${new Date().getFullYear()}-${Math.floor(Math.random() * 90000 + 10000)}`,
@@ -459,6 +462,22 @@ function SchoolPaymentSection({ F }: { F: string }) {
     };
     if (!data.parent_name || !data.parent_phone || !data.student_name || !data.amount || !data.reference_code || !data.purpose) return;
     const form = e.currentTarget;
+    setSaving(true);
+    const { error } = await (supabase as any).from("school_payments").insert({
+      receipt_no: data.receipt_no,
+      parent_name: data.parent_name,
+      parent_phone: data.parent_phone,
+      student_name: data.student_name,
+      grade: data.grade,
+      purpose: data.purpose,
+      amount: data.amount,
+      method: data.method,
+      reference_code: data.reference_code,
+      notes: data.notes,
+      paid_at: data.paid_at,
+    });
+    setSaving(false);
+    if (error) { setErrMsg(error.message); return; }
     downloadSchoolPaymentPdf(data);
     setDone(data);
     form.reset();
@@ -534,11 +553,14 @@ function SchoolPaymentSection({ F }: { F: string }) {
                   className={`${F} md:col-span-2`}
                 />
                 <textarea name="notes" rows={2} placeholder="Notes (optional)" className={`${F} md:col-span-2`} />
+                {errMsg && <p className="md:col-span-2 text-sm text-destructive">{errMsg}</p>}
                 <button
                   type="submit"
-                  className="md:col-span-2 inline-flex items-center justify-center gap-2 rounded-full bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground"
+                  disabled={saving}
+                  className="md:col-span-2 inline-flex items-center justify-center gap-2 rounded-full bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground disabled:opacity-60"
                 >
-                  <Download className="h-4 w-4" /> Submit & download receipt
+                  {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : <Download className="h-4 w-4" />}
+                  Submit & download receipt
                 </button>
                 <p className="md:col-span-2 text-xs text-muted-foreground">
                   Keep the downloaded PDF for your records. The school bursar will verify the payment code against records.
